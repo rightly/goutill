@@ -1,10 +1,13 @@
-package goutill
+package config
 
-import "testing"
+import (
+	"github.com/rightly/goutill/config"
+	"testing"
+)
 
 func TestLoader_validator(t *testing.T) {
-	c := New()
-	SetPath("/test")
+	c := config.New()
+	c.SetPath("/test")
 
 	if err := validator(c); err != nil {
 		t.Error(err)
@@ -16,10 +19,10 @@ type test struct {
 }
 
 func TestLoader_Load(t *testing.T) {
-	c := New()
-	SetSuffix("s")
+	c := config.New()
+	c.SetSuffix("s")
 	s := &test{}
-	err := Load(s)
+	err := c.Load(s)
 	if err != nil {
 		t.Error(err)
 	}

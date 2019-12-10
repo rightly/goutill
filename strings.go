@@ -6,7 +6,12 @@ import (
 	"strings"
 )
 
-func TrimSpace(s string) string {
+type stringUtil struct{}
+
+var String = stringUtil{}
+
+// Trim remove the space.
+func (stringUtil) Trim(s string) string {
 	var conv string
 	convArr := strings.Split(s, " ")
 	for _, v := range convArr {
@@ -16,10 +21,12 @@ func TrimSpace(s string) string {
 	return conv
 }
 
-func Normalization(s string) string {
-	return strings.ToUpper(TrimSpace(s))
+// ToUpper changes the string to uppercase.
+func (stringUtil) ToUpper(s string) string {
+	return strings.ToUpper(String.Trim(s))
 }
 
-func Hash(s string) string {
+// Md5Hash changes the string to md5 hash string.
+func (stringUtil) Md5Hash(s string) string {
 	return fmt.Sprintf("%x", md5.Sum([]byte(s)))
 }

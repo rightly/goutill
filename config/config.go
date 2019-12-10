@@ -1,7 +1,8 @@
-package goutill
+package config
 
 import (
 	"errors"
+	"github.com/rightly/goutill"
 	"os"
 	"reflect"
 	"strings"
@@ -32,10 +33,9 @@ type Config interface {
 		flag bool,
 		interval time.Duration,
 		callback func(interface{}),
-	)Config
+	) Config
 	Silent(flag bool) Config
 	Verbose(flag bool) Config
-	ENV() string
 
 	Load(v interface{}) error
 }
@@ -81,12 +81,12 @@ func (c *config) SetIndent(path string) Config {
 }
 
 func (c *config) SetPrefixToENV() Config {
-	c.prefix = c.ENV()
+	c.prefix = goutill.OS.ENV()
 	return c
 }
 
 func (c *config) SetSuffixToENV() Config {
-	c.suffix = c.ENV()
+	c.suffix = goutill.OS.ENV()
 	return c
 }
 
@@ -99,7 +99,7 @@ func (c *config) AutoReload(
 	flag bool,
 	interval time.Duration,
 	callback func(interface{}),
-)Config {
+) Config {
 
 	c.parser.AutoReload = flag
 	return c
@@ -115,9 +115,6 @@ func (c *config) Verbose(flag bool) Config {
 	return c
 }
 
-func (c *config) ENV() string {
-	return os.Getenv("ENV")
-}
 func (c *config) Prefix() string {
 	return c.prefix
 }
@@ -173,10 +170,10 @@ func validator(v interface{}) error {
 
 func extractExtension(file string) (filename string, ext string) {
 	chunks := strings.Split(file, ".")
-	for _, v := range chunks[:len(chunks) - 1] {
+	for _, v := range chunks[:len(chunks)-1] {
 		filename += v
 	}
-	ext = "." + chunks[len(chunks) - 1]
+	ext = "." + chunks[len(chunks)-1]
 
 	return
 }
@@ -194,11 +191,11 @@ func exist(path string) (bool, error) {
 	return false, err
 }
 
-func (c *config)filename() string {
+func (c *config) filename() string {
 	f := c.path
 	name, ext := extractExtension(c.configName)
 
-	if string(c.path[len(c.path) - 1]) != "/" {
+	if string(c.path[len(c.path)-1]) != "/" {
 		f += "/"
 	}
 	if c.prefix != "" {

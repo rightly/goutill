@@ -2,11 +2,15 @@ package goutill
 
 import "reflect"
 
+type collection struct{}
+
+var Collection = collection{}
+
 type Map struct {
 	reflect.Value
 }
 
-func MakeMap(key, value interface{}) *Map {
+func (collection) MakeMap(key, value interface{}) *Map {
 	keyType := reflect.TypeOf(key)
 	valueType := reflect.TypeOf(value)
 	mapType := reflect.MapOf(keyType, valueType)
@@ -17,6 +21,6 @@ func MakeMap(key, value interface{}) *Map {
 	}
 }
 
-func (r *Map) Add(key, value interface{})  {
+func (r *Map) Add(key, value interface{}) {
 	r.SetMapIndex(reflect.ValueOf(key), reflect.ValueOf(value))
 }
